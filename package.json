@@ -1,0 +1,69 @@
+{
+  "name": "node-mc",
+  "version": "0.0.1",
+  "author": "Mikhail Davydov <i@azproduction.ru>",
+  "description": "mc",
+  "contributors": [
+    {
+      "name": "Mikhail Davydov",
+      "email": "i@azproduction.ru"
+    }
+  ],
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/azproduction/node-mc.git"
+  },
+  "engines": {
+    "node": ">= 0.11.16",
+    "iojs": ">= 1.0.0"
+  },
+  "dependencies": {
+    "eventemitter3": "^0.1.6",
+    "exit-hook": "^1.1.1",
+    "flummox": "^3.1.1",
+    "html-tui": "^0.1.1",
+    "immutable": "^3.6.4",
+    "koa-conditional-get": "~1.0.2",
+    "koa-etag": "~2.0.0",
+    "koa-fresh": "0.0.3",
+    "koa-gzip": "^0.1.0",
+    "koa-json": "^1.1.1",
+    "koa-mount": "^1.3.0",
+    "koa-router": "~3.8.0",
+    "koa-static": "~1.4.9",
+    "koa-views": "~2.1.2",
+    "koa.io": "0.0.3",
+    "object-assign": "^2.0.0",
+    "react": "^0.13.1",
+    "react-document-title": "^1.0.2",
+    "react-router": "^0.13.1",
+    "restore-cursor": "^1.0.0",
+    "socket.io-client": "^1.3.5",
+    "source-map-support": "^0.2.10",
+    "superagent": "^1.1.0",
+    "then-jade": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "babel-core": "^4.7.12",
+    "babel-loader": "^4.1.0",
+    "babel-runtime": "^4.7.12",
+    "css-loader": "^0.9.1",
+    "esprima-fb": "^13001.1001.0-dev-harmony-fb",
+    "husky": "^0.7.0",
+    "jscs": "^1.12.0",
+    "jshint": "^2.6.3",
+    "react-hot-loader": "^1.2.3",
+    "style-loader": "^0.8.3",
+    "stylus-loader": "^1.0.0",
+    "webpack": "^1.7.3",
+    "webpack-dev-server": "^1.7.0"
+  },
+  "scripts": {
+    "hot": "webpack-dev-server --config webpack.config.dev.js --hot --progress --colors --port 2992 --inline",
+    "test": "jscs .",
+    "precommit": "npm test",
+    "prepush": "npm test"
+  }
+}
