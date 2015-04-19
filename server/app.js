@@ -22,4 +22,7 @@ app.io.use(function *(next) {
     flux.disconnect(this.socket);
 });
 
-TuiReact.render(TuiReact.createElement(Cli, {flux}), process.stdout);
+TuiReact.render(TuiReact.createElement(Cli, {flux}), {
+    stdout: process.stdout,
+    stdin: process.stdin
+});

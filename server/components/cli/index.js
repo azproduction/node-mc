@@ -1,11 +1,11 @@
 import TuiReact from '../../lib/tui-react';
 
+var React = TuiReact;
+
 export default class Cli extends TuiReact.Component {
     constructor() {
         super();
         this.state = {
-            isBeforeStart: true,
-            isBeforeClose: false,
             screen: ''
         };
     }
@@ -13,10 +13,6 @@ export default class Cli extends TuiReact.Component {
     componentDidMount() {
         var screenStore = this.props.flux.getStore('screen');
         screenStore.on('change', this._updateScreen.bind(this));
-
-        this.setState({
-            isBeforeStart: false
-        });
     }
 
     _updateScreen(screen) {
@@ -27,33 +23,26 @@ export default class Cli extends TuiReact.Component {
         });
     }
 
-    componentWillUnmount() {
-        this.setState({
-            isBeforeClose: true
-        });
+    _onKeyPress(event) {
+        this._forwardEvent('keypress', event);
+        // Handle: Ctrl + C
+        if (event && event.ctrlKey && event.key === 'c') {
+            process.exit(0);
+        }
     }
 
-    _renderCleanScreen() {
-        return '\u001b[2J\u001b[0;0H';
-    }
-
-    _renderHideCursor() {
-        return '\u001b[?25l';
-    }
-
-    _renderShowCursor() {
-        return '\u001b[?25h';
+    _forwardEvent(eventName, event) {
+        this.props.flux.getActions('event').emit(eventName, event);
     }
 
     render() {
-        if (this.state.isBeforeStart) {
-            return this._renderHideCursor() + this._renderCleanScreen();
-        }
-
-        if (this.state.isBeforeClose) {
-            return this._renderShowCursor();
-        }
-
-        return this._renderCleanScreen() + this.state.screen;
+        // TODO try to reuse node-mc/client/components/app/index.js (find there event listeners)
+        return (
+            <ansi
+                onKeyPress={this._onKeyPress.bind(this)}
+                onClick={this._forwardEvent.bind(this, 'click')}>
+                {this.state.screen}
+            </ansi>
+        );
     }
 }

@@ -1,4 +1,4 @@
-import koa from 'koa';
+import koa from 'koa.io';
 import router from 'koa-router';
 import views from 'koa-views';
 import env from '../../../shared/env';

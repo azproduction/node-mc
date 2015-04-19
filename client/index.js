@@ -3,11 +3,14 @@ import FluxComponent from 'flummox/component';
 import ClientFlux from './flux';
 import socket from './socket';
 import App from './components/app';
+import replayEvents from './lib/replay-events';
 
 window.React = React;
 
 let flux = new ClientFlux();
 flux.connect(socket());
+
+replayEvents(flux.getStore('event'), document);
 
 var connectToStores = {
     tabs: (store) => ({

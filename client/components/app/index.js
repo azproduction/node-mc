@@ -8,18 +8,20 @@ export default class App extends React.Component {
         super();
 
         this.state = {
-            counter: 123
+            counter: 0
         };
     }
 
     componentDidMount() {
+        this._renderAnsi();
         this.props.flux.getActions('tabs').changeDir('leftPanel', '~');
         this.props.flux.getActions('tabs').changeDir('rightPanel', '~');
-        this._renderAnsi();
     }
 
     componentDidUpdate() {
-        this._renderAnsi();
+        setTimeout(() => {
+            this._renderAnsi();
+        }, 0);
     }
 
     _changeContent() {
@@ -40,13 +42,16 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="b-app">
-                <div className="b-app__dom" ref="dom">
-                    <div style={{border: 'solid 1px #fff', background: 'blue', color: '#fff'}}>
-                        {this.state.counter}
+                <div className="b-app__dom" ref="dom" style={{width: 20}}>
+                    <div tabIndex="-1"
+                         onClick={this._changeContent.bind(this)}
+                         onKeyPress={this._changeContent.bind(this)}
+                         style={{border: 'solid 1px #fff', background: 'blue', color: '#fff', textAlign: 'center'}}
+                        >
+                        {this.state.counter || 'Click Me'}
                     </div>
                 </div>
                 <pre className="b-app__cli" ref="cli"></pre>
-                <button onClick={this._changeContent.bind(this)}>Debug</button>
             </div>
         );
     }
