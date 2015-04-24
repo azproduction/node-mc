@@ -18,7 +18,7 @@ export default class TuiEvents extends EventEmitter {
         this.mouse = new Mouse(stdio);
     }
 
-    _translateKeyboardEvent(eventName, key) {
+    _translateKeyboardEvent(eventName, character, key) {
         return {
             eventName,
             payload: {
@@ -37,7 +37,7 @@ export default class TuiEvents extends EventEmitter {
         keypress(this.readableStream);
 
         this.readableStream.on('keypress', (character, key) => {
-            this.emit('event', this._translateKeyboardEvent('keypress', key));
+            this.emit('event', this._translateKeyboardEvent('keypress', character, key));
         });
 
         this.readableStream.setRawMode(true);
