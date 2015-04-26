@@ -17,6 +17,7 @@ var flux = new ServerFlux();
 app.io.use(function *(next) {
     // on connect
     flux.connect(this.socket);
+    sendWindowSize();
     yield* next;
     // on disconnect
     flux.disconnect(this.socket);
@@ -26,3 +27,12 @@ TuiReact.render(TuiReact.createElement(Cli, {flux}), {
     stdout: process.stdout,
     stdin: process.stdin
 });
+
+function sendWindowSize() {
+    flux.getActions('render').resize({
+        width: process.stdout.columns,
+        height: process.stdout.rows
+    });
+}
+
+process.stdout.on('resize', sendWindowSize);

@@ -8,7 +8,7 @@ export default class App extends React.Component {
         super();
 
         this.state = {
-            counter: 0
+            frame: 0
         };
     }
 
@@ -24,9 +24,9 @@ export default class App extends React.Component {
         }, 0);
     }
 
-    _changeContent() {
+    _applicationChange() {
         this.setState({
-            counter: this.state.counter + 1
+            frame: this.state.frame + 1
         });
     }
 
@@ -40,15 +40,26 @@ export default class App extends React.Component {
     }
 
     render() {
+        var windowSizes = {
+            width: this.props.size.width,
+            height: this.props.size.height
+        };
+
         return (
             <div className="b-app">
-                <div className="b-app__dom" ref="dom" style={{width: 20}}>
-                    <div tabIndex="-1"
-                         onClick={this._changeContent.bind(this)}
-                         onKeyPress={this._changeContent.bind(this)}
-                         style={{border: 'solid 1px #fff', background: 'blue', color: '#fff', textAlign: 'center'}}
-                        >
-                        {this.state.counter || 'Click Me'}
+                <div className="b-app__dom" ref="dom" style={windowSizes}>
+                    <div className="b-app__content">
+                        <div onClick={this._applicationChange.bind(this)}
+                             className="b-app__block">
+                            {this.state.frame || 'Click Me'}
+                        </div>
+                        <input type="text"
+                               defaultValue={this.state.frame}
+                               onBlur={this._applicationChange.bind(this)}
+                               onFocus={this._applicationChange.bind(this)}
+                               onChange={this._applicationChange.bind(this)}
+                               autoFocus={true}
+                               className="b-app__input"/>
                     </div>
                 </div>
                 <pre className="b-app__cli" ref="cli"></pre>

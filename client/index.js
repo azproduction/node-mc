@@ -16,6 +16,9 @@ var connectToStores = {
     tabs: (store) => ({
         leftPanel: store.getTab('leftPanel'),
         rightPanel: store.getTab('rightPanel')
+    }),
+    render: (store) => ({
+        size: store.getSize()
     })
 };
 

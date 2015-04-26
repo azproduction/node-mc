@@ -1,6 +1,84 @@
 import initKeyboardEvent from './init-keyboard-event';
 
 /**
+ *
+ * @param {HTMLInputElement} input
+ */
+function clearSelection(input) {
+    let cursorPosition = input.selectionStart;
+    input.value = input.value.slice(0, input.selectionStart) + input.value.slice(input.selectionEnd);
+    input.selectionStart = cursorPosition;
+    input.selectionEnd = cursorPosition;
+}
+
+/**
+ *
+ * @param {HTMLInputElement} input
+ * @param {object} payload
+ */
+function sendKeyToInput(input, payload) {
+    if (payload.key === 'left') {
+        let cursorPosition = input.selectionStart - 1;
+        if (cursorPosition < 0) {
+            cursorPosition = 0;
+        }
+
+        input.selectionStart = cursorPosition;
+        input.selectionEnd = cursorPosition;
+        return;
+    }
+
+    if (payload.key === 'right') {
+        let cursorPosition = input.selectionEnd + 1;
+        if (cursorPosition > input.value.length) {
+            cursorPosition = input.value.length;
+        }
+
+        input.selectionStart = cursorPosition;
+        input.selectionEnd = cursorPosition;
+        return;
+    }
+
+    if (payload.key === 'backspace') {
+        if (input.selectionStart === input.selectionEnd) {
+            let cursorPosition = input.selectionStart - 1;
+            if (cursorPosition < 0) {
+                cursorPosition = 0;
+            }
+            input.value = input.value.slice(0, cursorPosition) + input.value.slice(cursorPosition + 1);
+            input.selectionStart = cursorPosition;
+            input.selectionEnd = cursorPosition;
+            return;
+        }
+
+        clearSelection(input);
+        return;
+    }
+
+    if (payload.key === 'delete') {
+        if (input.selectionStart === input.selectionEnd) {
+            let cursorPosition = input.selectionEnd;
+
+            input.value = input.value.slice(0, cursorPosition) + input.value.slice(cursorPosition + 1);
+            input.selectionStart = cursorPosition;
+            input.selectionEnd = cursorPosition;
+            return;
+        }
+
+        clearSelection(input);
+        return;
+    }
+
+    if (payload.char) {
+        let cursorPosition = input.selectionStart;
+        input.value = input.value.slice(0, input.selectionStart) + payload.char + input.value.slice(input.selectionEnd);
+        cursorPosition += 1;
+        input.selectionStart = cursorPosition;
+        input.selectionEnd = cursorPosition;
+    }
+}
+
+/**
  * @param {Document} document
  * @param {object} payload
  */
@@ -12,12 +90,9 @@ function sendKeyToActiveElement(document, payload) {
 
     if (isNotCanceled) {
         isNotCanceled = target.dispatchEvent(initKeyboardEvent('keypress', payload));
-        if (isNotCanceled) {
-            // TODO paste into input selection
-            // TODO delete, enter, backspace
-            // TODO cursor support
-            // TODO arrow navigation
-            console.log('payload.char=', payload.char);
+        if (isNotCanceled && target.tagName === 'INPUT') {
+            sendKeyToInput(target, payload);
+            target.dispatchEvent(initKeyboardEvent('input', payload));
         }
     }
 

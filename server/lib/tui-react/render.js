@@ -43,7 +43,6 @@ class TuiRootMount {
         this.onMouseMove = props.onMouseMove || null;
         this.onKeyPress = props.onKeyPress || null;
         this.onWheel = props.onWheel || null;
-        this.onResize = props.onResize || null;
     }
 
     componentDidMount() {

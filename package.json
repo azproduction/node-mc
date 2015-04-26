@@ -22,7 +22,7 @@
     "eventemitter3": "^0.1.6",
     "exit-hook": "^1.1.1",
     "flummox": "^3.1.1",
-    "html-tui": "^0.1.2",
+    "html-tui": "^0.2.0",
     "immutable": "^3.6.4",
     "keypress": "^0.2.1",
     "koa-conditional-get": "~1.0.2",
@@ -64,6 +64,7 @@
   },
   "scripts": {
     "hot": "webpack-dev-server --config webpack.config.dev.js --hot --progress --colors --port 2992 --inline",
+    "start": "node server",
     "test": "jscs .",
     "precommit": "npm test",
     "prepush": "npm test"

@@ -5,9 +5,9 @@ export default class EventStore extends Store {
     constructor(flux) {
         super();
 
-        let tabsActionIds = flux.getActionIds('event');
+        let eventActionIds = flux.getActionIds('event');
 
-        this.register(tabsActionIds.emit, this.storeEvent.bind(this));
+        this.register(eventActionIds.emit, this.storeEvent.bind(this));
 
         this.state = {
             event: new immutable.Map()

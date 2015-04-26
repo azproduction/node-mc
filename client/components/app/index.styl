@@ -1,11 +1,30 @@
 @require '../../../node_modules/html-tui/index.styl';
 
-.b-app {
-    &__dom {
-        tui-dom();
-    }
+.b-app
+    &__dom
+        tui-dom()
 
-    &__cli {
-        tui-cli();
-    }
-}
+    &__cli
+        tui-cli()
+
+    &__content
+        display flex
+
+    &__block
+        border solid 1px #fff
+        background blue
+        color #fff
+        text-align center
+        flex-basis 20px
+        flex-grow 1
+        &:focus
+            background red
+
+    &__input
+        border solid 1px #000
+        background #fff
+        color #000
+        &:focus
+            border solid 1px #fff
+            background blue
+            color #fff
