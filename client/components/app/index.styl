@@ -7,24 +7,175 @@
     &__cli
         tui-cli()
 
-    &__content
-        display flex
+.mc {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
 
-    &__block
-        border solid 1px #fff
-        background blue
-        color #fff
-        text-align center
-        flex-basis 20px
-        flex-grow 1
-        &:focus
-            background red
+.menu {
+    margin: 0;
+    background: #0ff;
+    color: #000;
+}
 
-    &__input
-        border solid 1px #000
-        background #fff
-        color #000
-        &:focus
-            border solid 1px #fff
-            background blue
-            color #fff
+.menu__item {
+    display: inline-block;
+    margin-left: 1px;
+    margin-right: 1px;
+    color: black;
+    height: 1px;
+}
+
+.menu__item-shortcut {
+    color: #ff0;
+}
+
+.content {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - 3px);
+    background: #000;
+}
+
+.panel {
+    width: 50%;
+    border: solid 1px #fff;
+    background: #00f;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    height: 100%;
+}
+
+.panel__caption {
+    display: inline-block;
+
+    position: absolute;
+
+    margin-top: -1px;
+    color: #000;
+    background: #fff;
+}
+
+.file-list {
+    height: 100%;
+}
+
+.file,
+.header {
+    overflow: hidden;
+    height: 1px;
+    color: white;
+}
+
+.file_state_focused {
+    background: #0ff;
+    color: #000;
+}
+
+.file_state_focused .file__name,
+.file_state_focused .file__size {
+    border-right-color: black;
+}
+
+.file__name,
+.file__size,
+.file__time,
+.header__name,
+.header__time,
+.header__size {
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.file__name,
+.header__name {
+    width: 50%;
+    border-right: solid 1px #fff;
+}
+
+.file__size,
+.header__size {
+    width: 20%;
+    border-right: solid 1px #fff;
+}
+
+.file__size {
+    text-align: right;
+}
+
+.file__time,
+.header__time{
+    width: 30%;
+    text-align: right;
+}
+
+.file__name_type_file {
+    color: #fff;
+    padding-left: 1px;
+}
+
+.file_state_focused .file__name_type_file {
+    color: white;
+}
+
+.header__name,
+.header__time,
+.header__size {
+    color: yellow;
+    text-align: center;
+}
+
+.console {
+    height: 1px;
+    overflow: hidden;
+    color: grey;
+    background: #000;
+}
+
+.console__input {
+    border: none;
+    color: #fff;
+    background: inherit;
+    height: 1px;
+    width: 100%;
+}
+
+.controls {
+    height: 1px;
+}
+
+.control {
+    float: left;
+    height: 1px;
+}
+
+.control__number,
+.control__name {
+    float: left;
+}
+
+.control__number {
+    margin-left: 1px;
+    color: #fff;
+}
+
+.control__name {
+    width: 6px;
+    background: #0ff;
+    color: #000;
+}
+
+.control:last-child .control__number {
+    margin-left: 0;
+}
+
+.control:last-child .control__name {
+    width: 5px;
+}
