@@ -4,6 +4,8 @@ import ClientFlux from './flux';
 import socket from './socket';
 import App from './components/app';
 import replayEvents from './lib/replay-events';
+import stats from './lib/stats';
+document.body.appendChild(stats.domElement);
 
 window.React = React;
 

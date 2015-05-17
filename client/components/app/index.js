@@ -2,6 +2,7 @@ import './index.styl';
 import React from 'react';
 import FluxComponent from 'flummox/component';
 import {TuiElement, render, compressBox} from 'html-tui';
+import stats from '../../lib/stats';
 
 export default class App extends React.Component {
     constructor() {
@@ -26,6 +27,7 @@ export default class App extends React.Component {
 
     _setupRepaint() {
         var repaint = () => {
+            stats.begin();
             var htmlElement = React.findDOMNode(this.refs.dom);
             var element = new TuiElement(htmlElement);
 
@@ -36,13 +38,14 @@ export default class App extends React.Component {
 
             // console.log.apply(console, render.chrome(serializedElement));
             this.props.flux.getActions('render').renderAnsi(ansi);
+            stats.end();
             requestAnimationFrame(repaint);
         };
         repaint();
     }
 
     _renderFileList(fileList) {
-        return fileList.slice(0, 10).map((file, key) => {
+        return fileList.map((file, key) => {
             var mtime = new Date(file.stat.mtime).toLocaleDateString();
             return (
                 <li className="file" key={key}>

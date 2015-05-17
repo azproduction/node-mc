@@ -40,7 +40,8 @@ export default class Cli extends TuiReact.Component {
         return (
             <ansi
                 onKeyPress={this._onKeyPress.bind(this)}
-                onClick={this._forwardEvent.bind(this, 'click')}>
+                onClick={this._forwardEvent.bind(this, 'click')}
+                onWheel={this._forwardEvent.bind(this, 'wheel')}>
                 {this.state.screen}
             </ansi>
         );

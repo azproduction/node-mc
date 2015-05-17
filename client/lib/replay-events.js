@@ -17,6 +17,22 @@ function clearSelection(input) {
  * @param {object} payload
  */
 function sendKeyToInput(input, payload) {
+    if (payload.key === 'home') {
+        let cursorPosition = 0;
+
+        input.selectionStart = cursorPosition;
+        input.selectionEnd = cursorPosition;
+        return;
+    }
+
+    if (payload.key === 'end') {
+        let cursorPosition = input.value.length;
+
+        input.selectionStart = cursorPosition;
+        input.selectionEnd = cursorPosition;
+        return;
+    }
+
     if (payload.key === 'left') {
         let cursorPosition = input.selectionStart - 1;
         if (cursorPosition < 0) {
@@ -110,6 +126,20 @@ function clickElement(document, {pageX, pageY}) {
     target.click();
 }
 
+function scrollElement(document, {pageX, pageY, deltaY}) {
+    var target = document.elementFromPoint(pageX, pageY);
+    while (target && target !== document) {
+        // Scroll possible
+        if (target.scrollHeight > target.clientHeight) {
+            target.scrollTop += deltaY;
+            return;
+        }
+
+        // No scroll, take parent
+        target = target.parentElement;
+    }
+}
+
 export default function replayEvents(eventStore, document) {
     eventStore.on('change', function () {
         var {eventName, payload} = eventStore.getEvent();
@@ -121,6 +151,11 @@ export default function replayEvents(eventStore, document) {
 
         if (eventName === 'click') {
             clickElement(document, payload);
+            return;
+        }
+
+        if (eventName === 'wheel') {
+            scrollElement(document, payload);
             return;
         }
     });

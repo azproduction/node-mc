@@ -64,6 +64,20 @@ export default class TuiEvents extends EventEmitter {
         };
     }
 
+    _translateScrollEvent(event) {
+        return {
+            eventName: 'wheel',
+            payload: {
+                deltaMode: 0,
+                deltaX: 0,
+                deltaY: event.button === 'up' ? -1 : 1,
+                deltaZ: 0,
+                pageX: event.x - 1,
+                pageY: event.y - 1
+            }
+        };
+    }
+
     _activateMouseEvents() {
         this.mouse.start();
 
@@ -77,6 +91,10 @@ export default class TuiEvents extends EventEmitter {
 
         this.mouse.on('down', (event) => {
             this.emit('event', this._translateMouseEvent('mousedown', event));
+        });
+
+        this.mouse.on('scroll', (event) => {
+            this.emit('event', this._translateScrollEvent(event));
         });
     }
 
