@@ -101,6 +101,7 @@ export default class TuiEvents extends EventEmitter {
     componentDidMount() {
         this._activateKeyboardEvents();
         this._activateMouseEvents();
+        this.writableStream.write('\r');
     }
 
     componentWillUnmount() {

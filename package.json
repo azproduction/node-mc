@@ -19,6 +19,7 @@
     "iojs": ">= 1.0.0"
   },
   "dependencies": {
+    "commander": "^2.8.1",
     "eventemitter3": "^0.1.6",
     "exit-hook": "^1.1.1",
     "flummox": "^3.1.1",
@@ -36,6 +37,8 @@
     "koa-views": "~2.1.2",
     "koa.io": "0.0.3",
     "object-assign": "^2.0.0",
+    "open": "0.0.5",
+    "phantom": "^0.7.2",
     "react": "^0.13.1",
     "react-document-title": "^1.0.2",
     "react-router": "^0.13.1",
@@ -44,7 +47,7 @@
     "source-map-support": "^0.2.10",
     "stats.js": "^1.0.0",
     "superagent": "^1.1.0",
-    "term-mouse": "azproduction/term-mouse#v0.3.0",
+    "term-mouse": "git+https://github.com/azproduction/term-mouse.git#v0.3.0",
     "then-jade": "^2.2.1"
   },
   "devDependencies": {
@@ -63,9 +66,12 @@
     "webpack": "^1.7.3",
     "webpack-dev-server": "^1.7.0"
   },
+  "bin": {
+    "nmc": "./bin/nmc"
+  },
   "scripts": {
     "hot": "webpack-dev-server --config webpack.config.dev.js --hot --progress --colors --port 2992 --inline",
-    "start": "node server",
+    "start": "node ./bin/nmc --client 'Google Chrome'",
     "test": "jscs .",
     "precommit": "npm test",
     "prepush": "npm test"

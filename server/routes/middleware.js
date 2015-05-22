@@ -6,7 +6,7 @@ import etag from 'koa-etag';
 import serve from 'koa-static';
 import json from 'koa-json';
 
-export default function (app) {
+export default function ({app, args}) {
     // Error handling
     app.use(function *(next) {
         try {
