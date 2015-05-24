@@ -3,6 +3,7 @@ import React from 'react';
 import FluxComponent from 'flummox/component';
 import {TuiElement, render, compressBox} from 'html-tui';
 import stats from '../../lib/stats';
+import moment from 'moment';
 
 export default class App extends React.Component {
     constructor() {
@@ -46,12 +47,11 @@ export default class App extends React.Component {
 
     _renderFileList(fileList) {
         return fileList.map((file, key) => {
-            var mtime = new Date(file.stat.mtime).toLocaleDateString();
             return (
                 <li className="file" key={key}>
                     <div className="file__name">{file.name}</div>
                     <div className="file__size">{file.stat.size}</div>
-                    <div className="file__time">{mtime}</div>
+                    <div className="file__time">{moment(file.stat.mtime).format('L')}</div>
                 </li>
             );
         });

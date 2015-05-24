@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
     target: 'web',
@@ -15,9 +16,12 @@ module.exports = {
         root: __dirname,
         extensions: ['', '.js', '.jsx']
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     module: {
         loaders: [{
+            test: /\.woff/,
+            loader: 'url-loader?mimetype=application/x-font-woff'
+        }, {
             test: /\.css$/,
             loader: 'style-loader!css-loader'
         }, {
@@ -31,5 +35,19 @@ module.exports = {
     },
     resolveLoader: {
         root: path.join(__dirname, '/node_modules')
-    }
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            compressor: {
+                warnings: false
+            }
+        }),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new webpack.NoErrorsPlugin()
+    ]
 };

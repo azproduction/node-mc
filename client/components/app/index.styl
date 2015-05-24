@@ -1,8 +1,28 @@
 @require '../../../node_modules/html-tui/index.styl';
 
+@font-face {
+    font-family: 'BLOKK';
+    font-style: normal;
+    font-weight: 400;
+    src: local('BLOKK'), url('./BLOKK.woff') format('woff');
+}
+
 .b-app
     &__dom
-        tui-dom()
+        tui-dom();
+        font-family: 'BLOKK';
+        word-spacing: 0;
+        font-size: 2px;
+        line-height: 1px;
+        letter-spacing: 0;
+
+        * {
+            font-family: 'BLOKK';
+            word-spacing: 0;
+            font-size: 2px;
+            line-height: 1px;
+            letter-spacing: 0;
+        }
 
     &__cli
         tui-cli()

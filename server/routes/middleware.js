@@ -3,7 +3,6 @@ import gzip from 'koa-gzip';
 import fresh from 'koa-fresh';
 import conditional from 'koa-conditional-get';
 import etag from 'koa-etag';
-import serve from 'koa-static';
 import json from 'koa-json';
 
 export default function ({app, args}) {

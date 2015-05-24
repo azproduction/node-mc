@@ -4,5 +4,7 @@ var config = require('./webpack.config');
 module.exports = objectAssign({}, config, {
     output: objectAssign({}, config.output, {
         publicPath: 'http://localhost:2992/assets/'
-    })
+    }),
+    devtool: 'inline-source-map',
+    plugins: []
 });

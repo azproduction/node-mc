@@ -9,6 +9,7 @@ import getCliOptions from './lib/cli-options';
 import {spawn} from 'child_process';
 import path from 'path';
 import phantom from 'phantom';
+import exitHook from 'exit-hook';
 
 export default class NodeMc {
     constructor(process) {
@@ -16,13 +17,16 @@ export default class NodeMc {
         this.args = getCliOptions(this.process);
         this.flux = new ServerFlux();
 
-        if (this.args.nodeEnv === 'development') {
-            this._startHotReloadServer();
-        }
         this._startServer();
         this._watchResize();
-        this._render();
-        this._openRenderClient();
+        this._startRenderer();
+
+        if (this.args.nodeEnv === 'development') {
+            this._startHotReloadServer()
+                .then(this._openRenderClient.bind(this));
+        } else {
+            this._openRenderClient();
+        }
     }
 
     _startServer() {
@@ -55,7 +59,7 @@ export default class NodeMc {
         });
     }
 
-    _render() {
+    _startRenderer() {
         var flux = this.flux;
         TuiReact.render(TuiReact.createElement(Cli, {flux}), {
             stdout: this.process.stdout,
@@ -93,7 +97,26 @@ export default class NodeMc {
                     page.open(appUrl, (status) => {
                         this.process.stdout.write('PhantomJS status ' + status + '\n');
                     });
+                    page.set('onLoadStarted', (success) => {
+                        this.process.stdout.write('Page load started ' + success + '\n');
+                    });
+                    page.set('onLoadFinished', (success) => {
+                        this.process.stdout.write('Page load finished ' + success + '\n');
+                    });
+                    page.set('onResourceRequested', ({url}) => {
+                        this.process.stdout.write('Loading resource ' + url + '\n');
+                    });
+                    page.set('onResourceReceived', ({status, url}) => {
+                        if (Number(status) === 200) {
+                            return;
+                        }
+                        this.process.stdout.write('Error loading resource ' + url + '\n');
+                    });
+                    page.set('onResourceTimeout', ({url}) => {
+                        this.process.stdout.write('Timeout resource ' + url + '\n');
+                    });
                 });
+                exitHook(ph.exit.bind(ph));
             });
             return;
         }
@@ -102,11 +125,14 @@ export default class NodeMc {
     }
 
     _startHotReloadServer() {
-        var webpackDevServer = require.resolve('.bin/webpack-dev-server');
-        var args = '--config webpack.config.dev.js --hot --progress --colors --port 2992 --inline';
-        spawn(webpackDevServer, args.split(' '), {
-            cwd: path.join(__dirname, '..'),
-            env: this.process.env
+        return new Promise((resolve) => {
+            var webpackDevServer = require.resolve('.bin/webpack-dev-server');
+            var args = '--config webpack.config.dev.js --hot --progress --colors --port 2992 --inline';
+            var hotReload = spawn(webpackDevServer, args.split(' '), {
+                cwd: path.join(__dirname, '..'),
+                env: this.process.env
+            });
+            hotReload.stdout.once('data', resolve);
         });
     }
 }
