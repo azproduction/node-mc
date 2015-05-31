@@ -1,4 +1,5 @@
 import initKeyboardEvent from './init-keyboard-event';
+import initWheelEvent from './init-wheel-event';
 
 /**
  *
@@ -126,12 +127,13 @@ function clickElement(document, {pageX, pageY}) {
     target.click();
 }
 
-function scrollElement(document, {pageX, pageY, deltaY}) {
+function wheelElement(document, {pageX, pageY, deltaY}) {
     var target = document.elementFromPoint(pageX, pageY);
     while (target && target !== document) {
         // Scroll possible
         if (target.scrollHeight > target.clientHeight) {
             target.scrollTop += deltaY;
+            target.dispatchEvent(initWheelEvent());
             return;
         }
 
@@ -155,7 +157,7 @@ export default function replayEvents(eventStore, document) {
         }
 
         if (eventName === 'wheel') {
-            scrollElement(document, payload);
+            wheelElement(document, payload);
             return;
         }
     });

@@ -3,9 +3,8 @@ import FluxComponent from 'flummox/component';
 import ClientFlux from './flux';
 import socket from './socket';
 import App from './components/app';
+import HtmlToTui from './components/html-to-tui';
 import replayEvents from './lib/replay-events';
-import stats from './lib/stats';
-document.body.appendChild(stats.domElement);
 
 window.React = React;
 
@@ -14,7 +13,7 @@ flux.connect(socket());
 
 replayEvents(flux.getStore('event'), document);
 
-var connectToStores = {
+let connectToStores = {
     tabs: (store) => ({
         leftPanel: store.getTab('leftPanel'),
         rightPanel: store.getTab('rightPanel')
@@ -24,10 +23,19 @@ var connectToStores = {
     })
 };
 
-var content = (
-    <FluxComponent flux={flux} connectToStores={connectToStores}>
-        <App />
-    </FluxComponent>
+/**
+ * @param {String} ansi
+ */
+function onRender(ansi) {
+    flux.getActions('render').renderAnsi(ansi);
+}
+
+let content = (
+    <HtmlToTui showStats={true} waitForDOMChanges={true} onRender={onRender}>
+        <FluxComponent flux={flux} connectToStores={connectToStores}>
+            <App />
+        </FluxComponent>
+    </HtmlToTui>
 );
 
 React.render(content, document.querySelector('#app'));

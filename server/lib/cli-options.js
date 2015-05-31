@@ -9,5 +9,6 @@ export default function getCliOptions(process) {
         .option('-c, --client [browser]', 'Client', 'default')
         .option('-e, --node-env [environment]', 'Environment', process.env.NODE_ENV || 'development')
         .option('--home [home-dir]', 'Current user home dir', process.env.HOME || '/')
+        .option('--wait-on-disconnect', 'It should wait for clients if all clients are disconnected')
         .parse(process.argv);
 }

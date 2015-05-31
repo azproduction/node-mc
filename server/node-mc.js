@@ -50,7 +50,7 @@ export default class NodeMc {
             sendWindowSize();
             yield* next;
             connectedClients--;
-            if (connectedClients === 0) {
+            if (connectedClients === 0 && !args.waitOnDisconnect) {
                 process.stderr.write('All render clients are disconnected.\n');
                 process.exit(1);
             }

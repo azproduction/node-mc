@@ -1,48 +1,11 @@
 import './index.styl';
 import React from 'react';
-import FluxComponent from 'flummox/component';
-import {TuiElement, render, compressBox} from 'html-tui';
-import stats from '../../lib/stats';
 import moment from 'moment';
 
 export default class App extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            frame: 0
-        };
-    }
-
     componentDidMount() {
-        this._setupRepaint();
         this.props.flux.getActions('tabs').changeDir('leftPanel', '~');
         this.props.flux.getActions('tabs').changeDir('rightPanel', '~');
-    }
-
-    _applicationChange() {
-        this.setState({
-            frame: this.state.frame + 1
-        });
-    }
-
-    _setupRepaint() {
-        var repaint = () => {
-            stats.begin();
-            var htmlElement = React.findDOMNode(this.refs.dom);
-            var element = new TuiElement(htmlElement);
-
-            var serializedElement = element.toArray();
-            serializedElement = compressBox(serializedElement);
-
-            var ansi = render.ansi(serializedElement);
-
-            // console.log.apply(console, render.chrome(serializedElement));
-            this.props.flux.getActions('render').renderAnsi(ansi);
-            stats.end();
-            requestAnimationFrame(repaint);
-        };
-        repaint();
     }
 
     _renderFileList(fileList) {
