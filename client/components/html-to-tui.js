@@ -24,10 +24,7 @@ export default class HtmlToTui extends React.Component {
     constructor () {
         super();
         this.stats = new Stats();
-    }
-
-    getDefaultProps() {
-        return {
+        this.props = {
             showStats: true,
             waitForDOMChanges: true,
             onRender: () => {return void 0;}

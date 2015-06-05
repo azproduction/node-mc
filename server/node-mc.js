@@ -117,6 +117,8 @@ export default class NodeMc {
                     });
                 });
                 exitHook(ph.exit.bind(ph));
+            }, {
+                dnodeOpts: {weak: false}
             });
             return;
         }
