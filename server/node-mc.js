@@ -34,7 +34,7 @@ export default class NodeMc {
         var {port, host} = this.args;
         var app = koa();
         var flux = this.flux;
-        var sendWindowSize = this._sendWindowSize.bind(this);
+        var clientConnect = this._clientConnect.bind(this);
         var connectedClients = 0;
         var process = this.process;
 
@@ -47,7 +47,7 @@ export default class NodeMc {
             // on connect
             connectedClients++;
             flux.connect(this.socket);
-            sendWindowSize();
+            clientConnect();
             yield* next;
             connectedClients--;
             if (connectedClients === 0 && !args.waitOnDisconnect) {
@@ -72,6 +72,19 @@ export default class NodeMc {
             width: this.process.stdout.columns,
             height: this.process.stdout.rows
         });
+    }
+
+    _clientConnect() {
+        this._sendWindowSize();
+
+        var config = Object.keys(this.args).reduce((config, argName) => {
+            if (/^client/.test(argName)) {
+                config[argName] = this.args[argName];
+            }
+            return config;
+        }, {});
+
+        this.flux.getActions('config').configureClient(config);
     }
 
     _watchResize() {

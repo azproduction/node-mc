@@ -95,70 +95,93 @@ function sendKeyToInput(input, payload) {
     }
 }
 
-/**
- * @param {Document} document
- * @param {object} payload
- */
-function sendKeyToActiveElement(document, payload) {
-    payload = Object.assign({bubbles: true, cancelable: true}, payload);
+export default class ReplayEvent {
+    /**
+     *
+     * @param {Document} document
+     * @param {Object} [options]
+     * @param {Number[]} [options.scale=[1, 1]]
+     */
+    constructor(document, options) {
+        this.setDocument(document);
+        this.setOptions(options);
+    }
 
-    var target = document.activeElement;
-    var isNotCanceled = target.dispatchEvent(initKeyboardEvent('keydown', payload));
+    setDocument(document) {
+        this._document = document;
+    }
 
-    if (isNotCanceled) {
-        isNotCanceled = target.dispatchEvent(initKeyboardEvent('keypress', payload));
-        if (isNotCanceled && target.tagName === 'INPUT') {
-            sendKeyToInput(target, payload);
-            target.dispatchEvent(initKeyboardEvent('input', payload));
+    setOptions(options) {
+        this._options = this._options || {};
+        this._options.scale = this._options.scale || [1, 1];
+
+        if (options && options.scale) {
+            this._options.scale[0] = options.scale[0] || 1;
+            this._options.scale[1] = options.scale[1] || 1;
         }
     }
 
-    target.dispatchEvent(initKeyboardEvent('keydown', payload));
-}
-
-/**
- * @param {Document} document
- * @param {Number} pageX
- * @param {Number} pageY
- */
-function clickElement(document, {pageX, pageY}) {
-    var target = document.elementFromPoint(pageX, pageY);
-    target.focus();
-    target.click();
-}
-
-function wheelElement(document, {pageX, pageY, deltaY}) {
-    var target = document.elementFromPoint(pageX, pageY);
-    while (target && target !== document) {
-        // Scroll possible
-        if (target.scrollHeight > target.clientHeight) {
-            target.scrollTop += deltaY;
-            target.dispatchEvent(initWheelEvent());
-            return;
-        }
-
-        // No scroll, take parent
-        target = target.parentElement;
-    }
-}
-
-export default function replayEvents(eventStore, document) {
-    eventStore.on('change', function () {
-        var {eventName, payload} = eventStore.getEvent();
-
+    event(eventName, payload) {
         if (eventName === 'keypress') {
-            sendKeyToActiveElement(document, payload);
+            this._sendKeyToActiveElement(payload);
             return;
         }
 
         if (eventName === 'click') {
-            clickElement(document, payload);
+            this._clickElement(payload);
             return;
         }
 
         if (eventName === 'wheel') {
-            wheelElement(document, payload);
+            this._wheelElement(payload);
             return;
         }
-    });
+    }
+
+    /**
+     * @param {object} payload
+     */
+    _sendKeyToActiveElement(payload) {
+        payload = Object.assign({bubbles: true, cancelable: true}, payload);
+
+        var target = this._document.activeElement;
+        var isNotCanceled = target.dispatchEvent(initKeyboardEvent('keydown', payload));
+
+        if (isNotCanceled) {
+            isNotCanceled = target.dispatchEvent(initKeyboardEvent('keypress', payload));
+            if (isNotCanceled && target.tagName === 'INPUT') {
+                sendKeyToInput(target, payload);
+                target.dispatchEvent(initKeyboardEvent('input', payload));
+            }
+        }
+
+        target.dispatchEvent(initKeyboardEvent('keydown', payload));
+    }
+
+    /**
+     * @param {Number} pageX
+     * @param {Number} pageY
+     */
+    _clickElement({pageX, pageY}) {
+        var [scaleX, scaleY] = this._options.scale;
+        var target = this._document.elementFromPoint(pageX * scaleX, pageY * scaleY);
+        target.focus();
+        target.click();
+    }
+
+    _wheelElement({pageX, pageY, deltaY}) {
+        var [scaleX, scaleY] = this._options.scale;
+        var target = this._document.elementFromPoint(pageX * scaleX, pageY * scaleY);
+        while (target && target !== this._document) {
+            // Scroll possible
+            if (target.scrollHeight > target.clientHeight) {
+                target.scrollTop += deltaY * scaleY;
+                target.dispatchEvent(initWheelEvent());
+                return;
+            }
+
+            // No scroll, take parent
+            target = target.parentElement;
+        }
+    }
 }

@@ -1,0 +1,27 @@
+@require '../../../node_modules/html-tui/index.styl';
+
+@font-face {
+    font-family: 'BLOKK';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./BLOKK.woff') format('woff');
+}
+
+.html-to-tui
+    tui-dom();
+
+    &_block-font {
+        font-family: 'BLOKK';
+        word-spacing: 0;
+        font-size: 1px;
+        line-height: 1px;
+        letter-spacing: 0;
+
+        * {
+            font-family: inherit;
+            word-spacing: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            letter-spacing: inherit;
+        }
+    }

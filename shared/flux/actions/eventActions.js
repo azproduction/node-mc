@@ -1,6 +1,6 @@
 import {Actions} from 'flummox';
 
-export default class KeyboardActions extends Actions {
+export default class EventActions extends Actions {
     emit(eventName, payload) {
         return {eventName, payload};
     }

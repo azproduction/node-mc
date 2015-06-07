@@ -4,23 +4,39 @@ import ClientFlux from './flux';
 import socket from './socket';
 import App from './components/app';
 import HtmlToTui from './components/html-to-tui';
-import replayEvents from './lib/replay-events';
+import FluxStream from './lib/flux-stream';
 
 window.React = React;
 
 let flux = new ClientFlux();
 flux.connect(socket());
 
-replayEvents(flux.getStore('event'), document);
-
-let connectToStores = {
+let appStores = {
     tabs: (store) => ({
         leftPanel: store.getTab('leftPanel'),
         rightPanel: store.getTab('rightPanel')
-    }),
-    render: (store) => ({
-        size: store.getSize()
     })
+};
+
+let htmlToTuiStores = {
+    render: (store) => {
+        let dimensions = store.getSize();
+
+        return {
+            terminalWidth: dimensions.width,
+            terminalHeight: dimensions.height
+        };
+    },
+    config: (store) => {
+        var config = store.getConfig();
+
+        return {
+            showStats: config.clientShowStats,
+            waitForDOMChanges: config.clientWaitForDomChanges,
+            scale: config.clientScale,
+            isHeadlessBrowser: config.client === 'phantomjs'
+        };
+    }
 };
 
 /**
@@ -30,12 +46,18 @@ function onRender(ansi) {
     flux.getActions('render').renderAnsi(ansi);
 }
 
+let eventStream = new FluxStream(flux.getStore('event'), (eventStore) => {
+    return eventStore.getEvent();
+});
+
 let content = (
-    <HtmlToTui showStats={true} waitForDOMChanges={true} onRender={onRender}>
-        <FluxComponent flux={flux} connectToStores={connectToStores}>
-            <App />
-        </FluxComponent>
-    </HtmlToTui>
+    <FluxComponent flux={flux} connectToStores={htmlToTuiStores}>
+        <HtmlToTui showStats={true} waitForDOMChanges={true} onRender={onRender} eventStream={eventStream}>
+            <FluxComponent flux={flux} connectToStores={appStores}>
+                <App />
+            </FluxComponent>
+        </HtmlToTui>
+    </FluxComponent>
 );
 
 React.render(content, document.querySelector('#app'));

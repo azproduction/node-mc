@@ -22,7 +22,7 @@
     "commander": "^2.8.1",
     "eventemitter3": "^0.1.6",
     "exit-hook": "^1.1.1",
-    "flummox": "^3.1.1",
+    "flummox": "^3.5.2",
     "html-tui": "^0.2.0",
     "immutable": "^3.6.4",
     "keypress": "^0.2.1",
@@ -75,7 +75,7 @@
   "scripts": {
     "hot": "webpack-dev-server --config webpack.config.dev.js --hot --progress --colors --port 2992 --inline",
     "build": "NODE_ENV=production webpack",
-    "start": "node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect",
+    "start": "node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect --client-scale='5,5'",
     "phantomjs": "node ./bin/nmc --client 'phantomjs' --wait-on-disconnect",
     "test": "jscs .",
     "precommit": "npm test",

@@ -19,7 +19,7 @@ module.exports = {
     devtool: 'source-map',
     module: {
         loaders: [{
-            test: /\.woff/,
+            test: /\.woff$/,
             loader: 'url-loader?mimetype=application/x-font-woff'
         }, {
             test: /\.css$/,
