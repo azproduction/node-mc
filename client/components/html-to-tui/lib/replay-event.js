@@ -175,7 +175,7 @@ export default class ReplayEvent {
         while (target && target !== this._document) {
             // Scroll possible
             if (target.scrollHeight > target.clientHeight) {
-                target.scrollTop += deltaY * scaleY;
+                target.scrollTop += deltaY;
                 target.dispatchEvent(initWheelEvent());
                 return;
             }

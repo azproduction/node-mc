@@ -11,12 +11,30 @@ export default function createApi(args) {
     app.use(router(app));
 
     app.get('/ls', function *() {
-        var dir = args.home;
+        var dirName = this.query.dir_name;
+        if (dirName === '~') {
+            dirName = args.home;
+        }
+        var parentDir = ['..'];
+        if (dirName === '/') {
+            parentDir = [];
+        }
         this.body = {
-            list: readdirSync(dir).map((name) => {
+            dirName: dirName,
+            list: parentDir.concat(readdirSync(dirName)).map((name) => {
+                var fullName = join(dirName, name);
+                var stats = statSync(fullName);
                 return {
                     name,
-                    stat: statSync(join(dir, name))
+                    fullName: fullName,
+                    stat: stats,
+                    isFile: stats.isFile(),
+                    isDirectory: stats.isDirectory(),
+                    isBlockDevice: stats.isBlockDevice(),
+                    isCharacterDevice: stats.isCharacterDevice(),
+                    isSymbolicLink: stats.isSymbolicLink(),
+                    isFIFO: stats.isFIFO(),
+                    isSocket: stats.isSocket()
                 };
             })
         };

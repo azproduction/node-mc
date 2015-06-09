@@ -4,14 +4,53 @@ import moment from 'moment';
 
 export default class App extends React.Component {
     componentDidMount() {
-        this.props.flux.getActions('tabs').changeDir('leftPanel', '~');
-        this.props.flux.getActions('tabs').changeDir('rightPanel', '~');
+        this._changeDir('leftPanel', '~').then(() => {
+            this.props.flux.getActions('tabs').focusTab('leftPanel');
+        });
+        this._changeDir('rightPanel', '~');
     }
 
-    _renderFileList(fileList) {
+    _selectFile(panelName, fileName) {
+        this.props.flux.getActions('tabs').selectFile(panelName, fileName);
+    }
+
+    _changeDir(panelName, fileName) {
+        return this.props.flux.getActions('tabs').changeDir(panelName, fileName);
+    }
+
+    _renderFileList(fileList, panelName, selectedFile) {
+        // hidden files
+        fileList = fileList.filter((file) => {
+            if (file.name === '..') {
+                return true;
+            }
+            return file.name[0] !== '.';
+        });
+
         return fileList.map((file, key) => {
+            var className = 'file';
+            var clickHandler;
+
+            if (file.fullName === selectedFile) {
+                className += ' file_state_selected';
+                // If file is focused – second click on it will be change dir.
+                if (file.isDirectory) {
+                    clickHandler = this._changeDir.bind(this, panelName, file.fullName);
+                }
+            } else {
+                clickHandler = this._selectFile.bind(this, panelName, file.fullName);
+            }
+
+            if (file.isFile) {
+                className += ' file_type_file';
+            }
+
+            if (file.isDirectory) {
+                className += ' file_type_directory';
+            }
+
             return (
-                <li className="file" key={key}>
+                <li className={className} key={key} onClick={clickHandler}>
                     <div className="file__name">{file.name}</div>
                     <div className="file__size">{file.stat.size}</div>
                     <div className="file__time">{moment(file.stat.mtime).format('L')}</div>
@@ -20,9 +59,18 @@ export default class App extends React.Component {
         });
     }
 
-    _renderPanel(panel) {
+    _renderPanel(panel, panelName) {
+        // activePanelName
+        var className = 'panel';
+        var selectedFile = null;
+
+        if (panelName === this.props.activePanelName) {
+            className += ' panel_selected';
+            selectedFile = panel.selectedFile;
+        }
+
         return (
-            <div className="panel">
+            <div className={className} key={panelName}>
                 <div className="panel__caption">{panel.dirName}</div>
                 <ul className="file-list">
                     <li className="header">
@@ -30,10 +78,24 @@ export default class App extends React.Component {
                         <div className="header__size">Size</div>
                         <div className="header__time">MTime</div>
                     </li>
-                    {this._renderFileList(panel.fileList)}
+                    {this._renderFileList(panel.fileList, panelName, selectedFile)}
                 </ul>
             </div>
         );
+    }
+
+    _renderPanels() {
+        var panels = [];
+
+        if (this.props.leftPanel) {
+            panels.push(this._renderPanel(this.props.leftPanel.toJS(), 'leftPanel'))
+        }
+
+        if (this.props.rightPanel) {
+            panels.push(this._renderPanel(this.props.rightPanel.toJS(), 'rightPanel'))
+        }
+
+        return panels;
     }
 
     render() {
@@ -47,8 +109,7 @@ export default class App extends React.Component {
                     <li className="menu__item"><span className="menu__item-shortcut">R</span>ight</li>
                 </ul>
                 <div className="content">
-                    {this.props.leftPanel ? this._renderPanel(this.props.leftPanel.toJS()) : null}
-                    {this.props.rightPanel ? this._renderPanel(this.props.rightPanel.toJS()) : null}
+                    {this._renderPanels()}
                 </div>
                 <div className="console">
                     <input className="console__input"

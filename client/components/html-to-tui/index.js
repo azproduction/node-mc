@@ -20,12 +20,13 @@ export default class HtmlToTui extends React.Component {
             this.stats.begin();
             var htmlElement = React.findDOMNode(this);
             var element = new TuiElement(htmlElement, {
-                downScale: this.props.scale
+                scale: this.props.scale
             });
 
             var serializedElement = element.toArray();
             serializedElement = compressBox(serializedElement);
 
+            // console.log.apply(console, render.chrome(serializedElement));
             var ansi = render.ansi(serializedElement);
 
             this.props.onRender(ansi);

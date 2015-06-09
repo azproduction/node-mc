@@ -12,9 +12,17 @@ export default class TabsActions extends Actions {
             .then(({body}) => {
                 return {
                     tabName: tabName,
-                    dirName: dirName,
-                    content: body
+                    dirName: body.dirName,
+                    fileList: body.list
                 };
             });
+    }
+
+    selectFile(tabName, fileName) {
+        return {tabName, fileName};
+    }
+
+    focusTab(tabName) {
+        return {tabName};
     }
 }

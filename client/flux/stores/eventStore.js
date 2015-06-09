@@ -15,9 +15,11 @@ export default class EventStore extends Store {
     }
 
     storeEvent({eventName, payload}) {
-        this.setState({
-            event: new immutable.Map({eventName, payload})
-        });
+        setTimeout(() => {
+            this.setState({
+                event: new immutable.Map({eventName, payload})
+            });
+        }, 0);
     }
 
     getEvent() {

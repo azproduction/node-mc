@@ -14,7 +14,8 @@ flux.connect(socket());
 let appStores = {
     tabs: (store) => ({
         leftPanel: store.getTab('leftPanel'),
-        rightPanel: store.getTab('rightPanel')
+        rightPanel: store.getTab('rightPanel'),
+        activePanelName: store.getActiveTabName()
     })
 };
 

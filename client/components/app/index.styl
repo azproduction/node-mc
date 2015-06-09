@@ -8,18 +8,18 @@
     margin: 0;
     background: #0ff;
     color: #000;
-}
 
-.menu__item {
-    display: inline-block;
-    margin-left: 1px;
-    margin-right: 1px;
-    color: black;
-    height: 1px;
-}
+    & &__item {
+        display: inline-block;
+        margin-left: 1px;
+        margin-right: 1px;
+        color: black;
+        height: 1px;
+    }
 
-.menu__item-shortcut {
-    color: #ff0;
+    &__item-shortcut {
+        color: #ff0;
+    }
 }
 
 .content {
@@ -40,16 +40,16 @@
     box-sizing: border-box;
     float: left;
     height: 100%;
-}
 
-.panel__caption {
-    display: inline-block;
+    & &__caption {
+        display: inline-block;
 
-    position: absolute;
+        position: absolute;
 
-    margin-top: -1px;
-    color: #000;
-    background: #fff;
+        margin-top: -1px;
+        color: #000;
+        background: #fff;
+    }
 }
 
 .file-list {
@@ -58,21 +58,30 @@
     overflow: auto;
 }
 
-.file,
 .header {
     overflow: hidden;
     height: 1px;
     color: white;
 }
 
-.file_state_focused {
-    background: #0ff;
-    color: #000;
-}
+.file {
+    overflow: hidden;
+    height: 1px;
+    color: white;
 
-.file_state_focused .file__name,
-.file_state_focused .file__size {
-    border-right-color: black;
+    &_state_selected {
+        background: #0ff;
+        color: #000;
+
+        .file__name,
+        .file__size {
+            border-right-color: black;
+        }
+    }
+
+    & &_type_file .file__name {
+        font-weight bold;
+    }
 }
 
 .file__name,
@@ -111,11 +120,6 @@
     text-align: right;
 }
 
-.file__name_type_file {
-    color: #fff;
-    padding-left: 1px;
-}
-
 .file_state_focused .file__name_type_file {
     color: white;
 }
@@ -149,16 +153,16 @@
 .control {
     float: left;
     height: 1px;
+
+    & &__number {
+        margin-left: 1px;
+        color: #fff;
+    }
 }
 
 .control__number,
 .control__name {
     float: left;
-}
-
-.control__number {
-    margin-left: 1px;
-    color: #fff;
 }
 
 .control__name {
@@ -168,6 +172,10 @@
 }
 
 .control:last-child .control__number {
+    margin-left: 0;
+}
+
+.control:first-child .control__number {
     margin-left: 0;
 }
 
