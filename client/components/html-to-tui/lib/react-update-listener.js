@@ -19,6 +19,11 @@ class ReactReconcileTransactionWithNotifier extends ReactReconcileTransaction {
         super();
         this.reactMountReady = CallbackQueueWithNotifier.getPooled(null);
     }
+
+    destructor() {
+        CallbackQueueWithNotifier.release(this.reactMountReady);
+        this.reactMountReady = null;
+    }
 }
 PooledClass.addPoolingTo(ReactReconcileTransactionWithNotifier);
 
@@ -41,7 +46,7 @@ export default class ReactUpdateListener extends EventEmitter {
             }
         });
 
-        ReactUpdates.ReactReconcileTransaction = ReactReconcileTransactionWithNotifier;
+        ReactUpdates.injection.injectReconcileTransaction(ReactReconcileTransactionWithNotifier);
 
         // Listen to global changes
         afterComponentDidUpdate.on('update', this._forceUpdate);
