@@ -18,6 +18,19 @@ export default class TabsActions extends Actions {
             });
     }
 
+    changeDirToCwd(tabName) {
+        return request
+            .get('/api/ls_cwd')
+            .exec()
+            .then(({body}) => {
+                return {
+                    tabName: tabName,
+                    dirName: body.dirName,
+                    fileList: body.list
+                };
+            });
+    }
+
     selectFile(tabName, fileName) {
         return {tabName, fileName};
     }

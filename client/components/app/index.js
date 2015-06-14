@@ -4,10 +4,12 @@ import moment from 'moment';
 
 export default class App extends React.Component {
     componentDidMount() {
-        this._changeDir('leftPanel', '~').then(() => {
-            this.props.flux.getActions('tabs').focusTab('leftPanel');
+        let tabsActions = this.props.flux.getActions('tabs');
+
+        tabsActions.changeDirToCwd('leftPanel').then(() => {
+            tabsActions.focusTab('leftPanel');
         });
-        this._changeDir('rightPanel', '~');
+        tabsActions.changeDirToCwd('rightPanel');
     }
 
     _selectFile(panelName, fileName) {

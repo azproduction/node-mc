@@ -33,9 +33,10 @@ let htmlToTuiStores = {
 
         return {
             showStats: config.clientShowStats,
-            waitForDOMChanges: config.clientWaitForDomChanges,
+            waitForDOMChanges: !config.clientRaf,
             scale: config.clientScale,
-            isHeadlessBrowser: config.client === 'phantomjs'
+            isHeadlessBrowser: config.client === 'phantomjs',
+            useMutationObserver: config.clientMutationObserver
         };
     }
 };
@@ -53,7 +54,7 @@ let eventStream = new FluxStream(flux.getStore('event'), (eventStore) => {
 
 let content = (
     <FluxComponent flux={flux} connectToStores={htmlToTuiStores}>
-        <HtmlToTui showStats={true} waitForDOMChanges={true} onRender={onRender} eventStream={eventStream}>
+        <HtmlToTui onRender={onRender} eventStream={eventStream}>
             <FluxComponent flux={flux} connectToStores={appStores}>
                 <App />
             </FluxComponent>

@@ -4,6 +4,32 @@ import json from 'koa-json';
 import {readdirSync, statSync} from 'fs';
 import {join} from 'path';
 
+function ls(dirName) {
+    var parentDir = ['..'];
+    if (dirName === '/') {
+        parentDir = [];
+    }
+    return {
+        dirName: dirName,
+        list: parentDir.concat(readdirSync(dirName)).map((name) => {
+            var fullName = join(dirName, name);
+            var stats = statSync(fullName);
+            return {
+                name,
+                fullName: fullName,
+                stat: stats,
+                isFile: stats.isFile(),
+                isDirectory: stats.isDirectory(),
+                isBlockDevice: stats.isBlockDevice(),
+                isCharacterDevice: stats.isCharacterDevice(),
+                isSymbolicLink: stats.isSymbolicLink(),
+                isFIFO: stats.isFIFO(),
+                isSocket: stats.isSocket()
+            };
+        })
+    };
+}
+
 export default function createApi(args) {
     var app = koa();
 
@@ -15,29 +41,11 @@ export default function createApi(args) {
         if (dirName === '~') {
             dirName = args.home;
         }
-        var parentDir = ['..'];
-        if (dirName === '/') {
-            parentDir = [];
-        }
-        this.body = {
-            dirName: dirName,
-            list: parentDir.concat(readdirSync(dirName)).map((name) => {
-                var fullName = join(dirName, name);
-                var stats = statSync(fullName);
-                return {
-                    name,
-                    fullName: fullName,
-                    stat: stats,
-                    isFile: stats.isFile(),
-                    isDirectory: stats.isDirectory(),
-                    isBlockDevice: stats.isBlockDevice(),
-                    isCharacterDevice: stats.isCharacterDevice(),
-                    isSymbolicLink: stats.isSymbolicLink(),
-                    isFIFO: stats.isFIFO(),
-                    isSocket: stats.isSocket()
-                };
-            })
-        };
+        this.body = ls(dirName);
+    });
+
+    app.get('/ls_cwd', function *() {
+        this.body = ls(process.cwd());
     });
 
     return app;

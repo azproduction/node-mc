@@ -8,6 +8,7 @@ export default class TabsStore extends Store {
         let tabsActionIds = flux.getActionIds('tabs');
 
         this.register(tabsActionIds.changeDir, this._dirChange);
+        this.register(tabsActionIds.changeDirToCwd, this._dirChange);
         this.register(tabsActionIds.selectFile, this._selectFile);
         this.register(tabsActionIds.focusTab, this._focusTab);
 

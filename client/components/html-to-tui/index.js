@@ -38,6 +38,7 @@ export default class HtmlToTui extends React.Component {
             this.repaintHandler();
             this.repaintFrameId = requestAnimationFrame(this.repaintOnEveryFrame);
         };
+        this.mutationObserver = null;
     }
 
     _setupRepaint(oldWaitForChanges, newWaitForChanges) {
@@ -112,10 +113,53 @@ export default class HtmlToTui extends React.Component {
         }
     }
 
-    componentDidMount() {
+    _setupMutationObserver(oldFlag, newFlag) {
+        if (oldFlag === newFlag) {
+            return;
+        }
+
+        if (typeof MutationObserver === 'undefined') {
+            return;
+        }
+
+        // Create
+        if (oldFlag === null) {
+            this.mutationObserver = new MutationObserver(() => {
+                this._forceRepaint();
+            });
+        }
+
+        // Add
+        if (newFlag === true) {
+            this.mutationObserver.observe(React.findDOMNode(this), {
+                childList: true,
+                attributes: true,
+                characterData: true,
+                subtree: true
+            });
+        }
+
+        // Remove
+        if (newFlag === false) {
+            this.mutationObserver.disconnect();
+        }
+
+        // Destroy
+        if (newFlag === null) {
+            this.mutationObserver.disconnect();
+            this.mutationObserver = null;
+        }
+    }
+
+    _forceRepaint() {
         updates.forceUpdate();
+    }
+
+    componentDidMount() {
+        this._forceRepaint();
         this._setupStats(null, this.props.showStats);
         this._setupRepaint(null, this.props.waitForDOMChanges);
+        this._setupMutationObserver(null, this.props.useMutationObserver);
         this._setupReplayEvent(null, this.props.scale);
         this._setupEventStream(null, this.props.eventStream);
     }
@@ -123,6 +167,7 @@ export default class HtmlToTui extends React.Component {
     componentWillReceiveProps(newProps) {
         this._setupStats(this.props.showStats, newProps.showStats);
         this._setupRepaint(this.props.waitForDOMChanges, newProps.waitForDOMChanges);
+        this._setupMutationObserver(this.props.useMutationObserver, newProps.useMutationObserver);
         this._setupReplayEvent(this.props.scale, newProps.scale);
         this._setupEventStream(this.props.eventStream, newProps.eventStream);
     }
@@ -130,12 +175,13 @@ export default class HtmlToTui extends React.Component {
     componentWillUnmount() {
         this._setupStats(this.props.showStats, null);
         this._setupRepaint(this.props.waitForDOMChanges, null);
+        this._setupMutationObserver(this.props.useMutationObserver, null);
         this._setupReplayEvent(this.props.scale, null);
         this._setupEventStream(this.props.eventStream, null);
     }
 
     componentDidUpdate() {
-        updates.forceUpdate();
+        this._forceRepaint();
     }
 
     render() {
@@ -162,6 +208,7 @@ export default class HtmlToTui extends React.Component {
 HtmlToTui.defaultProps = {
     showStats: true,
     waitForDOMChanges: true,
+    useMutationObserver: false,
     isHeadlessBrowser: false,
     terminalWidth: 80,
     terminalHeight: 24,

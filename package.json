@@ -75,7 +75,7 @@
   "scripts": {
     "hot": "webpack-dev-server --config webpack.config.dev.js --hot --progress --colors --port 2992 --inline",
     "build": "NODE_ENV=production webpack",
-    "start": "node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect --client-scale='5,5'",
+    "start": "node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect --client-show-stats --client-mutation-observer --client-scale='5,7'",
     "phantomjs": "node ./bin/nmc --client 'phantomjs' --wait-on-disconnect",
     "test": "jscs .",
     "precommit": "npm test",
