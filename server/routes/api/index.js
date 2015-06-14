@@ -3,6 +3,7 @@ import router from 'koa-router';
 import json from 'koa-json';
 import {readdirSync, statSync} from 'fs';
 import {join} from 'path';
+import homedir from 'os-homedir';
 
 function ls(dirName) {
     var parentDir = ['..'];
@@ -30,7 +31,7 @@ function ls(dirName) {
     };
 }
 
-export default function createApi(args) {
+export default function api() {
     var app = koa();
 
     app.use(json());
@@ -39,7 +40,7 @@ export default function createApi(args) {
     app.get('/ls', function *() {
         var dirName = this.query.dir_name;
         if (dirName === '~') {
-            dirName = args.home;
+            dirName = homedir();
         }
         this.body = ls(dirName);
     });

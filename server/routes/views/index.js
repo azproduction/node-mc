@@ -2,10 +2,10 @@ import koa from 'koa.io';
 import router from 'koa-router';
 import views from 'koa-views';
 
-export default function createViews(args) {
+export default function views(args) {
     var app = koa();
 
-// Add jade rendering
+    // Add jade rendering
     app.use(views(__dirname, {
         cache: true,
         default: 'jade'

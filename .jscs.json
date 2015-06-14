@@ -2,7 +2,7 @@
     "excludeFiles": [
         ".git/**",
         "node_modules/**",
-        "example/assets/**"
+        "assets/**"
     ],
     "esnext": true,
     "esprima": "esprima-fb",

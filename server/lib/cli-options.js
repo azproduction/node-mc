@@ -12,7 +12,6 @@ export default function getCliOptions(process) {
         .option('-h, --host [host]', 'Render host', 'localhost')
         .option('-c, --client [browser]', 'Client', 'default')
         .option('-e, --node-env [environment]', 'Environment', process.env.NODE_ENV || 'development')
-        .option('--home [home-dir]', 'Current user home dir', process.env.HOME || '/')
         .option('--wait-on-disconnect', 'It should wait for clients if all clients are disconnected', false)
         .option('--client-show-stats', 'Should be perf stats shown on client or not', false)
         .option('--client-mutation-observer', 'Should client use Mutation Observer or not', false)
