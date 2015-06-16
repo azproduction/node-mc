@@ -2,14 +2,20 @@
   "name": "node-mc",
   "version": "0.1.0",
   "author": "Mikhail Davydov <i@azproduction.ru>",
-  "description": "mc",
+  "description": "Midnight Commander written in React/Node stack",
   "contributors": [
     {
       "name": "Mikhail Davydov",
       "email": "i@azproduction.ru"
     }
   ],
-  "keywords": [],
+  "licence": "MIT",
+  "keywords": [
+    "mc",
+    "nmc",
+    "midnight-commander",
+    "file-browser"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/azproduction/node-mc.git"
