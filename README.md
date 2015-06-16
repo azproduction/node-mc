@@ -6,7 +6,7 @@
 [![Dependency Status][david-image]][david-url]
 [![License][license-image]][license-url]
 
-Midnight Commander written in JavaScript.
+Midnight Commander written in React/Node stack.
 
 ## Installing
 
