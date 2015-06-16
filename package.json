@@ -23,7 +23,7 @@
     "eventemitter3": "^0.1.6",
     "exit-hook": "^1.1.1",
     "flummox": "^3.5.2",
-    "html-tui": "^0.2.0",
+    "html-tui": "^0.3.0",
     "immutable": "^3.6.4",
     "keypress": "^0.2.1",
     "koa-conditional-get": "~1.0.2",
