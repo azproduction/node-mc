@@ -1,4 +1,4 @@
-# [in progress] node-mc
+# node-mc
 
 [![NPM version][npm-image]][npm-url]
 [![Build status][travis-image]][travis-url]
@@ -6,15 +6,16 @@
 [![Dependency Status][david-image]][david-url]
 [![License][license-image]][license-url]
 
-mc
+Midnight Commander written in JavaScript.
+
+## Installing
+
+ - `npm i node-mc` or global `npm i node-mc -g`
+ - Install `PhantomJS 2.0` – `brew install phantomjs` or `sudo apt-get install phantomjs`.
 
 ## Running
 
- - run `node server` on Terminal 1
- - run `npm run hot` on Terminal 2
- - open `http://localhost:8080/` in Browser
- - wait for output in terminal 1
-
+`nmc` or `npm start`
 
 [npm-image]: https://img.shields.io/npm/v/node-mc.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/node-mc

@@ -75,8 +75,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect --client-show-stats --client-mutation-observer --client-scale='5,7'",
-    "phantomjs": "node ./bin/nmc --client 'phantomjs' --wait-on-disconnect",
+    "debug": "NODE_ENV=development node ./bin/nmc --client 'Google Chrome' --wait-on-disconnect --client-show-stats --client-mutation-observer --client-scale='5,7'",
+    "start": "node ./bin/nmc",
     "test": "jscs .",
     "precommit": "npm test",
     "prepush": "npm test"
