@@ -1,25 +1,24 @@
 import koa from 'koa.io';
 import http from 'http';
 import routes from './routes';
-import Cli from './components/cli';
-import TuiReact from './lib/tui-react';
 import ServerFlux from './flux';
 import open from 'open';
-import getCliOptions from './lib/cli-options';
+import getCliOptions from './cli-options';
 import {spawn} from 'child_process';
 import path from 'path';
 import phantom from 'phantom';
 import exitHook from 'exit-hook';
+import TuiTerminal from '../lib/tui-terminal';
 
 export default class NodeMc {
     constructor(process) {
         this.process = process;
         this.args = getCliOptions(this.process);
+        this.tuiTerminal = new TuiTerminal(this.process);
         this.flux = new ServerFlux();
+        this.connectedClients = 0;
 
         this._startServer();
-        this._watchResize();
-        this._startRenderer();
 
         if (this.args.nodeEnv === 'development') {
             this._startHotReloadServer()
@@ -33,49 +32,36 @@ export default class NodeMc {
         var args = this.args;
         var {port, host} = this.args;
         var app = koa();
-        var flux = this.flux;
-        var clientConnect = this._clientConnect.bind(this);
-        var connectedClients = 0;
-        var process = this.process;
-
         routes({app, args});
 
         app.listen(Number(port), host);
 
+        var clientConnect = this._clientConnect.bind(this);
+        var clientDisconnect = this._clientDisconnect.bind(this);
         // Connect flux to socket.io channel
         app.io.use(function *(next) {
-            // on connect
-            connectedClients++;
-            flux.connect(this.socket);
-            clientConnect();
+            clientConnect(this.socket);
             yield* next;
-            connectedClients--;
-            if (connectedClients === 0 && !args.waitOnDisconnect) {
-                process.stderr.write('All render clients are disconnected.\n');
-                process.exit(1);
-            }
-            // on disconnect
-            flux.disconnect(this.socket);
+            clientDisconnect(this.socket);
         });
     }
 
-    _startRenderer() {
-        var flux = this.flux;
-        TuiReact.render(TuiReact.createElement(Cli, {flux}), {
-            stdout: this.process.stdout,
-            stdin: this.process.stdin
-        });
+    _clientDisconnect(socket) {
+        this.connectedClients--;
+
+        if (this.connectedClients === 0 && !this.args.waitOnDisconnect) {
+            this.process.stderr.write('All render clients are disconnected.\n');
+            this.process.exit(1);
+        }
+        // on disconnect
+        this.flux.disconnect(socket);
+        this.tuiTerminal.disconnect(socket);
     }
 
-    _sendWindowSize() {
-        this.flux.getActions('render').resize({
-            width: this.process.stdout.columns,
-            height: this.process.stdout.rows
-        });
-    }
-
-    _clientConnect() {
-        this._sendWindowSize();
+    _clientConnect(socket) {
+        this.connectedClients++;
+        this.flux.connect(socket);
+        this.tuiTerminal.connect(socket);
 
         var config = Object.keys(this.args).reduce((config, argName) => {
             if (/^client/.test(argName)) {
@@ -85,10 +71,6 @@ export default class NodeMc {
         }, {});
 
         this.flux.getActions('config').configureClient(config);
-    }
-
-    _watchResize() {
-        this.process.stdout.on('resize', this._sendWindowSize.bind(this));
     }
 
     _openRenderClient() {

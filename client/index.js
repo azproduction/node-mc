@@ -1,15 +1,18 @@
 import React from 'react';
 import FluxComponent from 'flummox/component';
 import ClientFlux from './flux';
-import socket from './socket';
-import App from './components/app';
-import HtmlToTui from './components/html-to-tui';
-import FluxStream from './lib/flux-stream';
+import App from './app';
+import TuiDom from '../lib/tui-dom';
+import io from 'socket.io-client';
 
 window.React = React;
 
+let socket = io({
+    transports: ['websocket', 'polling']
+});
+
 let flux = new ClientFlux();
-flux.connect(socket());
+flux.connect(socket);
 
 let appStores = {
     tabs: (store) => ({
@@ -19,15 +22,7 @@ let appStores = {
     })
 };
 
-let htmlToTuiStores = {
-    render: (store) => {
-        let dimensions = store.getSize();
-
-        return {
-            terminalWidth: dimensions.width,
-            terminalHeight: dimensions.height
-        };
-    },
+let tuiDomStores = {
     config: (store) => {
         var config = store.getConfig();
 
@@ -41,24 +36,13 @@ let htmlToTuiStores = {
     }
 };
 
-/**
- * @param {String} ansi
- */
-function onRender(ansi) {
-    flux.getActions('render').renderAnsi(ansi);
-}
-
-let eventStream = new FluxStream(flux.getStore('event'), (eventStore) => {
-    return eventStore.getEvent();
-});
-
 let content = (
-    <FluxComponent flux={flux} connectToStores={htmlToTuiStores}>
-        <HtmlToTui onRender={onRender} eventStream={eventStream}>
+    <FluxComponent flux={flux} connectToStores={tuiDomStores}>
+        <TuiDom socket={socket}>
             <FluxComponent flux={flux} connectToStores={appStores}>
                 <App />
             </FluxComponent>
-        </HtmlToTui>
+        </TuiDom>
     </FluxComponent>
 );
 

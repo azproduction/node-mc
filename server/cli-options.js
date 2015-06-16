@@ -1,5 +1,5 @@
 import commander from 'commander';
-import pkg from '../../package.json';
+import pkg from '../package.json';
 
 function arrayOfNumbers(string) {
     return String(string).split(',').map(Number);
