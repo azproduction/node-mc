@@ -1,5 +1,4 @@
-import request from 'superagent';
-import {Request} from 'superagent';
+import request, {Request} from 'superagent';
 
 Request.prototype.exec = function () {
     return new Promise((resolve, reject) => {
