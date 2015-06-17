@@ -1,4 +1,6 @@
 .mc {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     background: #000;
@@ -8,64 +10,63 @@
     margin: 0;
     background: #0ff;
     color: #000;
+    height: 1px;
+    min-height: 1px;
 
     & &__item {
+        min-width: 7px;
+        text-align: center;
         display: inline-block;
         margin-left: 1px;
         margin-right: 1px;
         color: black;
-        height: 1px;
     }
 
     &__item-shortcut {
-        color: #ff0;
+        color: #000;
     }
 }
 
 .content {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    height: calc(100% - 3px);
-    background: #000;
+    display: flex;
+    flex-grow: 1;
 }
 
 .panel {
+    display: flex;
+    flex-direction: column;
     width: 50%;
+
     border: solid 1px #fff;
+
     background: #00f;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    float: left;
-    height: 100%;
 
     & &__caption {
-        display: inline-block;
-
         position: absolute;
 
         margin-top: -1px;
+        color: #fff;
+    }
+
+    &_selected .panel__caption {
         color: #000;
         background: #fff;
     }
 }
 
 .file-list {
-    height: 100%;
     color: #fff;
     overflow: auto;
 }
 
 .header {
-    overflow: hidden;
+    display: flex;
     height: 1px;
     color: white;
 }
 
 .file {
-    overflow: hidden;
+    display: flex;
     height: 1px;
     color: white;
 
@@ -79,26 +80,18 @@
         }
     }
 
-    & &_type_file .file__name {
-        font-weight bold;
+    &_type_file .file__name {
+        padding-left: 1px;
+    }
+
+    &_type_directory {
+        font-weight: bold;
     }
 }
 
 .file__name,
-.file__size,
-.file__time,
-.header__name,
-.header__time,
-.header__size {
-    float: left;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.file__name,
 .header__name {
-    width: 50%;
+    flex-grow: 1;
     border-right: solid 1px #fff;
     overflow: hidden;
     height: 1px;
@@ -106,17 +99,18 @@
 
 .file__size,
 .header__size {
-    width: 20%;
+    flex-basis: 10px;
     border-right: solid 1px #fff;
 }
 
 .file__size {
     text-align: right;
+    overflow: hidden;
 }
 
 .file__time,
-.header__time{
-    width: 30%;
+.header__time {
+    flex-basis: 12px;
     text-align: right;
 }
 
@@ -125,14 +119,21 @@
 }
 
 .header__name,
-.header__time,
 .header__size {
     color: yellow;
     text-align: center;
+    font-weight: bold;
+}
+
+.header__time {
+    color: yellow;
+    text-align: left;
+    font-weight: bold;
 }
 
 .console {
     height: 1px;
+    min-height: 1px;
     overflow: hidden;
     color: grey;
     background: #000;
@@ -147,38 +148,27 @@
 }
 
 .controls {
+    display: flex;
     height: 1px;
+    min-height: 1px;
 }
 
 .control {
-    float: left;
+    display: flex;
+    flex-grow: 1;
     height: 1px;
+    min-height: 1px;
 
     & &__number {
-        margin-left: 1px;
+        width: 2px;
+        min-width: 2px;
+        text-align: right;
         color: #fff;
     }
 }
 
-.control__number,
 .control__name {
-    float: left;
-}
-
-.control__name {
-    width: 6px;
+    flex-grow: 1;
     background: #0ff;
     color: #000;
-}
-
-.control:last-child .control__number {
-    margin-left: 0;
-}
-
-.control:first-child .control__number {
-    margin-left: 0;
-}
-
-.control:last-child .control__name {
-    width: 5px;
 }

@@ -23,10 +23,10 @@ module.exports = {
             loader: 'url-loader?mimetype=application/x-font-woff'
         }, {
             test: /\.css$/,
-            loader: 'style-loader!css-loader'
+            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions'
         }, {
             test: /\.styl/,
-            loader: 'style-loader!css-loader!stylus-loader'
+            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!stylus-loader'
         }, {
             test: /\.js$/,
             exclude: /node_modules/,

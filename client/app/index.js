@@ -31,6 +31,7 @@ export default class App extends React.Component {
 
         return fileList.map((file, key) => {
             var className = 'file';
+            var filePrefix = '';
             var clickHandler;
 
             if (file.fullName === selectedFile) {
@@ -49,13 +50,14 @@ export default class App extends React.Component {
 
             if (file.isDirectory) {
                 className += ' file_type_directory';
+                filePrefix += '/';
             }
 
             return (
                 <li className={className} key={key} onClick={clickHandler}>
-                    <div className="file__name">{file.name}</div>
+                    <div className="file__name">{filePrefix + file.name}</div>
                     <div className="file__size">{file.stat.size}</div>
-                    <div className="file__time">{moment(file.stat.mtime).format('L')}</div>
+                    <div className="file__time">{moment(file.stat.mtime).format('MMM DD HH:mm')}</div>
                 </li>
             );
         });
@@ -78,7 +80,7 @@ export default class App extends React.Component {
                     <li className="header">
                         <div className="header__name">Name</div>
                         <div className="header__size">Size</div>
-                        <div className="header__time">MTime</div>
+                        <div className="header__time">Modify time</div>
                     </li>
                     {this._renderFileList(panel.fileList, panelName, selectedFile)}
                 </ul>
@@ -114,10 +116,7 @@ export default class App extends React.Component {
                     {this._renderPanels()}
                 </div>
                 <div className="console">
-                    <input className="console__input"
-                           type="text"
-                           defaultValue="~/Documents/html-cli$ node index.js"
-                           autofocus />
+                    <input className="console__input" type="text" defaultValue="" autofocus/>
                 </div>
                 <ul className="controls">
                     <li className="control">
