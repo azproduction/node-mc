@@ -70,7 +70,7 @@ export default class NodeMc {
             return config;
         }, {});
 
-        this.flux.getActions('config').configureClient(config);
+        this.flux.getActions('app').configureClient(config);
     }
 
     _openRenderClient() {

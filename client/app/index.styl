@@ -27,7 +27,114 @@
     }
 }
 
-.content {
+.file-preview {
+    display: flex;
+    flex-grow: 1;
+
+    color: #fff;
+    background: #000;
+    overflow: auto;
+
+    &__content {
+        flex-grow: 1;
+    }
+
+    .hljs-comment,
+    .diff .hljs-header,
+    .hljs-doctype,
+    .hljs-pi,
+    .lisp .hljs-string {
+        color: gray;
+    }
+
+    /* Solarized Green */
+    .hljs-keyword,
+    .hljs-winutils,
+    .method,
+    .hljs-addition,
+    .css .hljs-tag,
+    .hljs-request,
+    .hljs-status,
+    .nginx .hljs-title {
+        color: green;
+    }
+
+    /* Solarized Cyan */
+    .hljs-number,
+    .hljs-command,
+    .hljs-string,
+    .hljs-tag .hljs-value,
+    .hljs-rule .hljs-value,
+    .hljs-doctag,
+    .tex .hljs-formula,
+    .hljs-regexp,
+    .hljs-hexcolor,
+    .hljs-link_url {
+        color: cyan;
+    }
+
+    /* Solarized Blue */
+    .hljs-title,
+    .hljs-localvars,
+    .hljs-chunk,
+    .hljs-decorator,
+    .hljs-built_in,
+    .hljs-identifier,
+    .vhdl .hljs-literal,
+    .hljs-id,
+    .css .hljs-function,
+    .hljs-name {
+        color: blue;
+    }
+
+    /* Solarized Yellow */
+    .hljs-attribute,
+    .hljs-variable,
+    .lisp .hljs-body,
+    .smalltalk .hljs-number,
+    .hljs-constant,
+    .hljs-class .hljs-title,
+    .hljs-parent,
+    .hljs-type,
+    .hljs-link_reference {
+        color: yellow;
+    }
+
+    /* Solarized Orange */
+    .hljs-preprocessor,
+    .hljs-preprocessor .hljs-keyword,
+    .hljs-pragma,
+    .hljs-shebang,
+    .hljs-symbol,
+    .hljs-symbol .hljs-string,
+    .diff .hljs-change,
+    .hljs-special,
+    .hljs-attr_selector,
+    .hljs-subst,
+    .hljs-cdata,
+    .css .hljs-pseudo,
+    .hljs-header {
+        color: orange;
+    }
+
+    /* Solarized Red */
+    .hljs-deletion,
+    .hljs-important {
+        color: red;
+    }
+
+    /* Solarized Violet */
+    .hljs-link_label {
+        color: violet;
+    }
+
+    .tex .hljs-formula {
+        background: grey;
+    }
+
+}
+
+.panels {
     display: flex;
     flex-grow: 1;
 }
@@ -151,24 +258,34 @@
     display: flex;
     height: 1px;
     min-height: 1px;
+    justify-content: space-around;
 }
 
 .control {
     display: flex;
+
     flex-grow: 1;
     height: 1px;
     min-height: 1px;
+    width: 1px;
+    min-width: 1px;
+
+    overflow: hidden;
+
+    background: #0ff;
 
     & &__number {
         width: 2px;
         min-width: 2px;
+        flex-basis: 2px;
         text-align: right;
-        color: #fff;
-    }
-}
 
-.control__name {
-    flex-grow: 1;
-    background: #0ff;
-    color: #000;
+        color: #fff;
+        background: #000;
+    }
+
+    &__name {
+        flex-grow: 1;
+        color: #000;
+    }
 }

@@ -1,15 +1,17 @@
 import './index.styl';
 import React from 'react';
 import moment from 'moment';
+import Highlight from 'react-highlight';
 
 export default class App extends React.Component {
     componentDidMount() {
         let tabsActions = this.props.flux.getActions('tabs');
 
-        tabsActions.changeDirToCwd('leftPanel').then(() => {
+        tabsActions.changeDir('leftPanel').then(() => {
             tabsActions.focusTab('leftPanel');
         });
-        tabsActions.changeDirToCwd('rightPanel');
+
+        tabsActions.changeDir('rightPanel');
     }
 
     _selectFile(panelName, fileName) {
@@ -18,6 +20,44 @@ export default class App extends React.Component {
 
     _changeDir(panelName, fileName) {
         return this.props.flux.getActions('tabs').changeDir(panelName, fileName);
+    }
+
+    _viewFile(fileName) {
+        return this.props.flux.getActions('file').openFile(fileName);
+    }
+
+    _exit() {
+        return this.props.flux.getActions('app').exit();
+    }
+
+    _viewSelectedFile() {
+        var panelName = this.props.activePanelName;
+        var activePanel = this.props.panels[panelName];
+        if (!activePanel) {
+            return;
+        }
+
+        var selectedFile = activePanel.get('selectedFile');
+        var file = activePanel.get('fileList').find((file) => {
+            return file.get('fullName') === selectedFile;
+        });
+
+        if (!file) {
+            return;
+        }
+
+        var fileName = file.get('fullName');
+        if (file.get('isDirectory')) {
+            return this._changeDir(panelName, fileName);
+        }
+
+        if (file.get('isFile')) {
+            return this._viewFile(fileName);
+        }
+    }
+
+    _closeFile() {
+        return this.props.flux.getActions('file').closeFile();
     }
 
     _renderFileList(fileList, panelName, selectedFile) {
@@ -39,6 +79,10 @@ export default class App extends React.Component {
                 // If file is focused – second click on it will be change dir.
                 if (file.isDirectory) {
                     clickHandler = this._changeDir.bind(this, panelName, file.fullName);
+                }
+
+                if (file.isFile) {
+                    clickHandler = this._viewFile.bind(this, file.fullName);
                 }
             } else {
                 clickHandler = this._selectFile.bind(this, panelName, file.fullName);
@@ -91,18 +135,77 @@ export default class App extends React.Component {
     _renderPanels() {
         var panels = [];
 
-        if (this.props.leftPanel) {
-            panels.push(this._renderPanel(this.props.leftPanel.toJS(), 'leftPanel'))
+        if (this.props.panels.leftPanel) {
+            panels.push(this._renderPanel(this.props.panels.leftPanel.toJS(), 'leftPanel'))
         }
 
-        if (this.props.rightPanel) {
-            panels.push(this._renderPanel(this.props.rightPanel.toJS(), 'rightPanel'))
+        if (this.props.panels.rightPanel) {
+            panels.push(this._renderPanel(this.props.panels.rightPanel.toJS(), 'rightPanel'))
         }
 
-        return panels;
+        return (
+            <div className="panels">
+                {panels}
+            </div>
+        );
     }
 
-    render() {
+    _renderFilePreview() {
+        return (
+            <div className="mc">
+                <div className="menu">{this.props.openedFileName}</div>
+                <pre className="file-preview">
+                    <Highlight className="file-preview__content">{this.props.openedFileContent}</Highlight>
+                </pre>
+                <ul className="controls">
+                    <li className="control">
+                        <div className="control__number">1</div>
+                        <div className="control__name">Help</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">2</div>
+                        <div className="control__name">UnWrap</div>
+                    </li>
+                    <li className="control" onClick={this._closeFile.bind(this)}>
+                        <div className="control__number">3</div>
+                        <div className="control__name">Quit</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">4</div>
+                        <div className="control__name">Hex</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">5</div>
+                        <div className="control__name">Goto</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">6</div>
+                        <div className="control__name">&nbsp;</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">7</div>
+                        <div className="control__name">Search</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">8</div>
+                        <div className="control__name">Raw</div>
+                    </li>
+                    <li className="control">
+                        <div className="control__number">9</div>
+                        <div className="control__name">Format</div>
+                    </li>
+                    <li className="control" onClick={this._closeFile.bind(this)}>
+                        <div className="control__number">10</div>
+                        <div className="control__name">Quit</div>
+                    </li>
+                </ul>
+            </div>
+        );
+    }
+
+    _renderFileBrowser() {
+        var content = this._renderPanels();
+
         return (
             <div className="mc">
                 <ul className="menu">
@@ -112,9 +215,7 @@ export default class App extends React.Component {
                     <li className="menu__item"><span className="menu__item-shortcut">O</span>ptions</li>
                     <li className="menu__item"><span className="menu__item-shortcut">R</span>ight</li>
                 </ul>
-                <div className="content">
-                    {this._renderPanels()}
-                </div>
+                {content}
                 <div className="console">
                     <input className="console__input" type="text" defaultValue="" autofocus/>
                 </div>
@@ -127,7 +228,7 @@ export default class App extends React.Component {
                         <div className="control__number">2</div>
                         <div className="control__name">Menu</div>
                     </li>
-                    <li className="control">
+                    <li className="control" onClick={this._viewSelectedFile.bind(this)}>
                         <div className="control__number">3</div>
                         <div className="control__name">View</div>
                     </li>
@@ -155,12 +256,20 @@ export default class App extends React.Component {
                         <div className="control__number">9</div>
                         <div className="control__name">PullDn</div>
                     </li>
-                    <li className="control">
+                    <li className="control" onClick={this._exit.bind(this)}>
                         <div className="control__number">10</div>
                         <div className="control__name">Quit</div>
                     </li>
                 </ul>
             </div>
         );
+    }
+
+    render() {
+        if (!this.props.isFileOpened) {
+            return this._renderFileBrowser();
+        }
+
+        return this._renderFilePreview();
     }
 }

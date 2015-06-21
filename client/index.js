@@ -16,9 +16,16 @@ flux.connect(socket);
 
 let appStores = {
     tabs: (store) => ({
-        leftPanel: store.getTab('leftPanel'),
-        rightPanel: store.getTab('rightPanel'),
+        panels: {
+            leftPanel: store.getTab('leftPanel'),
+            rightPanel: store.getTab('rightPanel')
+        },
         activePanelName: store.getActiveTabName()
+    }),
+    file: (store) => ({
+        isFileOpened: store.getFileName() !== null,
+        openedFileName: store.getFileName(),
+        openedFileContent: store.getFileContent()
     })
 };
 

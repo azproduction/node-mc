@@ -31,6 +31,9 @@ module.exports = {
             test: /\.js$/,
             exclude: /node_modules/,
             loader: 'babel-loader?optional=runtime'
+        }, {
+            test: /\.jsx$/,
+            loader: 'babel-loader?optional=runtime'
         }]
     },
     resolveLoader: {

@@ -1,11 +1,11 @@
 import SocketFlux from '../../lib/socket-flux';
-import ConfigActions from './actions/configActions';
+import AppActions from './actions/appActions';
 
 export default class SharedFlux extends SocketFlux {
     constructor() {
         super();
 
-        this.createActions('config', ConfigActions);
-        this.broadcastActions('config');
+        this.createActions('app', AppActions);
+        this.broadcastActions('app');
     }
 }

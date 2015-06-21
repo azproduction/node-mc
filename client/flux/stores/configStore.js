@@ -5,9 +5,9 @@ export default class ConfigStore extends Store {
     constructor(flux) {
         super();
 
-        let configActionIds = flux.getActionIds('config');
+        let appActionIds = flux.getActionIds('app');
 
-        this.register(configActionIds.configureClient, this.configureEvent.bind(this));
+        this.register(appActionIds.configureClient, this.configureEvent.bind(this));
 
         this.state = {
             config: {}
