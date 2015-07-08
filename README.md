@@ -26,7 +26,7 @@ full experience, please run `nmc` in development mode (see below).
 git clone git://github.com/azproduction/node-mc.git
 cd node-mc
 npm install
-npm start debug
+npm run debug
 ```
 
 [npm-image]: https://img.shields.io/npm/v/node-mc.svg?style=flat-square
