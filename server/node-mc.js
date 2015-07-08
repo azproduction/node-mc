@@ -125,8 +125,14 @@ export default class NodeMc {
             var args = '--config webpack.config.dev.js --hot --no-info --colors --port 2992 --inline';
             var hotReload = spawn(webpackDevServer, args.split(' '), {
                 cwd: path.join(__dirname, '..'),
-                env: this.process.env
+                env: this.process.env,
+                stdio: [
+                    'pipe',
+                    'pipe',
+                    this.process.stderr
+                ]
             });
+            exitHook(hotReload.kill.bind(hotReload));
             hotReload.stdout.once('data', resolve);
         });
     }
