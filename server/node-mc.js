@@ -122,7 +122,7 @@ export default class NodeMc {
     _startHotReloadServer() {
         return new Promise((resolve) => {
             var webpackDevServer = require.resolve('.bin/webpack-dev-server');
-            var args = '--config webpack.config.dev.js --hot --progress --colors --port 2992 --inline';
+            var args = '--config webpack.config.dev.js --hot --no-info --colors --port 2992 --inline';
             var hotReload = spawn(webpackDevServer, args.split(' '), {
                 cwd: path.join(__dirname, '..'),
                 env: this.process.env

@@ -2,7 +2,7 @@ import koa from 'koa.io';
 import router from 'koa-router';
 import views from 'koa-views';
 
-export default function views(args) {
+export default function viewsRoutes(args) {
     var app = koa();
 
     // Add jade rendering
