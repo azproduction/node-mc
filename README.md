@@ -15,7 +15,14 @@ Midnight Commander written in React/Node stack.
 
 ## Running
 
-`nmc` or `npm start`
+`nmc` or `npm start`.
+
+Currently it has font rendering issues due to PhantomJS, in order to have
+full experience, please run `nmc` in development mode – `npm start debug`.
+
+## Running in development mode
+
+`npm start debug`
 
 [npm-image]: https://img.shields.io/npm/v/node-mc.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/node-mc
