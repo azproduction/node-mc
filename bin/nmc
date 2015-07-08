@@ -1,4 +1,2 @@
-#!/usr/bin/env node --harmony
-var NodeMc = require('../server');
-
-new NodeMc(process);
+#!/bin/sh
+/usr/bin/env node --harmony `dirname $0`/nmc.js "$@"
