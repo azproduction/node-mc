@@ -8,6 +8,10 @@
 
 Midnight Commander written in React/Node stack.
 
+![](https://raw.githubusercontent.com/azproduction/talk-back-to-text-ui/master/pictures/node-mc.png)
+
+[How it works](https://www.youtube.com/watch?v=ee_U2t-8L48)
+
 ## Installing
 
  - `npm i node-mc` or global `npm i node-mc -g`
