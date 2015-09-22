@@ -1,6 +1,6 @@
 {
   "name": "node-mc",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Mikhail Davydov <i@azproduction.ru>",
   "description": "Midnight Commander written in React/Node stack",
   "contributors": [
